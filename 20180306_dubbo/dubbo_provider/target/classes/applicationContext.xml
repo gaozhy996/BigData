@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans.xsd        http://code.alibabatech.com/schema/dubbo        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="dubbo-provider"  />
+
+    <!-- 使用multicast广播注册中心暴露服务地址 -->
+    <dubbo:registry id="zkRegistry" protocol="zookeeper" address="192.168.128.137:2181" default="true"/>
+
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20880" />
+
+    <!-- 声明需要暴露的服务接口 -->
+    <!--多协议注册-->
+    <!--
+    <dubbo:service interface="com.baizhi.service.DemoService" ref="demoService" protocol="dubbo"/>
+    <dubbo:service interface="com.baizhi.service.DemoService" ref="demoService" protocol="rmi"/>
+    -->
+
+    <!--多注册中心-->
+    <!-- 一个服务可以注册到多个服务中心 | 不同服务使用不同的注册中心 | 多注册中心引用-->
+    <dubbo:registry id="redisRegistry" protocol="redis" address="192.168.128.137:6379" />
+
+    <dubbo:service interface="com.baizhi.service.DemoService" ref="demoService" group="g1"/>
+    <dubbo:service interface="com.baizhi.service.DemoService" ref="demoService1" group="g2"/>
+    <!-- 和本地bean一样实现服务 -->
+    <bean id="demoService" class="com.baizhi.service.DemoServiceImpl" />
+    <bean id="demoService1" class="com.baizhi.service.DemoServiceImpl1" />
+</beans>
