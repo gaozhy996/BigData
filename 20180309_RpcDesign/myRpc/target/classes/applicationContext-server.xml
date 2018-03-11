@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="zookeeperRegistry" class="com.baizhi.common.impl.ZookeeperRegistry">
+        <constructor-arg name="serverAddress" value="192.168.128.137:2181"></constructor-arg>
+    </bean>
+
+    <bean id="serviceProviderCneter" class="com.baizhi.ServiceProviderCneter" init-method="start" destroy-method="close">
+        <constructor-arg index="0" name="registry" ref="zookeeperRegistry"></constructor-arg>
+        <constructor-arg index="1" name="port" value="20881"></constructor-arg>
+        <constructor-arg index="2" name="exposeBean">
+            <map>
+                <entry key="com.baizhi.service.HelloService">
+                    <bean class="com.baizhi.service.HelloServiceImpl"></bean>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+</beans>
