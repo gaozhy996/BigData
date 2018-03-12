@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="zookeeperRegistry" class="com.baizhi.common.impl.ZookeeperRegistry">
+        <constructor-arg index="0" value="192.168.128.137:2181"></constructor-arg>
+    </bean>
+
+    <bean id="nettyTransporter" class="com.baizhi.common.impl.NettyTransporter" destroy-method="close"/>
+
+    <bean id="clusterFailover" class="com.baizhi.common.impl.ClusterFailoverImpl" />
+
+    <bean id="randomLoadBalancer" class="com.baizhi.common.impl.RandomLoadBalancer"/>
+
+    <bean id="proxy" class="com.baizhi.common.RpcObjectProxy">
+        <constructor-arg index="0" ref="zookeeperRegistry"></constructor-arg>
+
+        <constructor-arg index="1" value="com.baizhi.service.HelloService"></constructor-arg>
+
+        <constructor-arg index="2" ref="randomLoadBalancer"></constructor-arg>
+        <constructor-arg index="3" ref="clusterFailover"></constructor-arg>
+        <constructor-arg index="4" ref="nettyTransporter"></constructor-arg>
+    </bean>
+</beans>
